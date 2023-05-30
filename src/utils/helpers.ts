@@ -1,4 +1,6 @@
-import { Actor } from '../interfaces/user.interface';
+import { API_CONFIG } from '../apis/api.config';
+import { HttpCreateRole } from '../interfaces/role.interface';
+import { Actor, HttpCreateUser } from '../interfaces/user.interface';
 import { CIPError } from './errors';
 
 export function validateRequiredParams(params: (keyof any)[], instance: any): void {
@@ -29,7 +31,13 @@ export function generateWebSocketURL(baseUrl: string, socketPostfix: string): st
 }
 
 export function validateActor(actor: Actor | null | undefined): void {
-  if (!(actor && typeof actor === 'object' && actor.id && actor.username)) {
+  if (!(actor && typeof actor === 'object' && actor.username)) {
     throw new CIPError('Actor is required.');
+  }
+}
+
+export function validateBulkRecordsCount(data: Array<HttpCreateUser | HttpCreateRole>): void {
+  if (!(Array.isArray(data) && data.length <= API_CONFIG.MAX_ALLOWED_BULK_RECORDS_PER_REQUEST)) {
+    throw new CIPError(`Maximum ${API_CONFIG.MAX_ALLOWED_BULK_RECORDS_PER_REQUEST} records are allowed per request.`);
   }
 }

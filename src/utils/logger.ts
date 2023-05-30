@@ -4,7 +4,17 @@ function showLogs(): boolean {
 
 function log(consoleMethod: keyof Console, ...messages: any[]): void {
   if (showLogs()) {
-    (console[consoleMethod] as (...data: any[]) => void)(...messages);
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split('T')[0];
+    const formattedTime = currentDate.toLocaleTimeString([], {
+      hour12: true,
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
+    const formattedMessages = messages.map((message) => `[CIP] [${formattedDate} ${formattedTime}] ${message}`);
+    (console[consoleMethod] as (...data: any[]) => void)(...formattedMessages);
   }
 }
 

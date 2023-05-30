@@ -1,4 +1,6 @@
-import {HttpCreateRoleRequest,
+import {HttpCreateBulkRolesRequest,
+  HttpCreateBulkRolesResponse,
+  HttpCreateRoleRequest,
   HttpCreateRoleResponse,
   HttpDeleteRoleRequest,
   HttpDeleteRoleResponse,
@@ -52,11 +54,19 @@ export default class RolesApi extends BaseApi {
     );
   }
 
+  public async createBulk(data: HttpCreateBulkRolesRequest): Promise<HttpCreateBulkRolesResponse> {
+    return this.sendApiRequest<HttpCreateBulkRolesRequest, HttpCreateBulkRolesResponse>(
+      API_ENDPOINTS.ROLE.CREATE_BULK,
+      data,
+      'Unable to create bulk Roles.',
+    );
+  }
+
   public async update(data: HttpUpdateRoleRequest): Promise<HttpUpdateRoleResponse> {
     return this.sendApiRequest<HttpUpdateRoleRequest, HttpUpdateRoleResponse>(
       API_ENDPOINTS.ROLE.UPDATE,
       data,
-      `Unable to update Role against id ${data.role.id}.`,
+      `Unable to update Role against id ${data.id}.`,
     );
   }
 

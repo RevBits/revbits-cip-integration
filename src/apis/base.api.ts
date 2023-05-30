@@ -1,9 +1,11 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import https from 'https';
+import FormData from 'form-data';
 
 import { CIP_OPTIONS, PLATFORM } from '../interfaces/types.type';
 import { API_CONFIG } from './api.config';
 import { CIPError } from '../utils/errors';
+import { logger } from '../utils/logger';
 
 export abstract class BaseApi {
   private api: AxiosInstance;
@@ -32,8 +34,10 @@ export abstract class BaseApi {
   }
 
   private async request<T>(config: AxiosRequestConfig): Promise<T> {
+    logger.info('Sending API Request to CIP');
     try {
       const response: AxiosResponse<T> = await this.api.request<T>(config);
+      logger.info('API Response Received from CIP');
       return response.data;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -85,7 +89,29 @@ export abstract class BaseApi {
     requestData: T | undefined,
     errorMessage: string,
   ): Promise<U> {
+    // console.log(this.api.defaults.headers.Authorization);
     const response = await this.post<T, U>(endpoint, this.getRequestData<T>(requestData));
+
+    return this.resolveResponse<U>(response, errorMessage);
+  }
+
+  protected async sendFormDataApiRequest<U extends { return_code: number }>(
+    endpoint: string,
+    formData: FormData,
+    errorMessage: string,
+  ): Promise<U> {
+    formData.append('platform', this.platform);
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url: endpoint,
+      data: formData,
+      headers: {
+        ...formData.getHeaders(),
+        Authorization: this.api.defaults.headers.Authorization,
+      },
+    };
+
+    const response = await this.request<U>(config);
 
     return this.resolveResponse<U>(response, errorMessage);
   }

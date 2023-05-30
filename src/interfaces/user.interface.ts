@@ -16,7 +16,6 @@ export interface UserPlatformAccess {
 }
 
 export interface Actor {
-  id: string;
   username: string;
 }
 
@@ -56,6 +55,7 @@ type UserSortableKeys = {
 }[keyof User];
 
 interface UserQueryParams {
+  usernames?: Array<string>;
   username?: string;
   firstname?: string;
   lastname?: string;
@@ -77,58 +77,67 @@ export type HttpGetAllUsersResponse = HttpPaginatedResponse<User>;
 
 export interface HttpGetOneUserRequest {
   platform?: PLATFORM;
-  id: string;
+  id?: string | null | undefined;
+  username?: string | null | undefined;
 }
 
 export type HttpGetOneUserResponse = HttpResponse<User>;
 
+export interface HttpCreateUser {
+  firstname: string;
+  lastname: string;
+  username: string;
+  password: string;
+  usersalt: string;
+  roles: UserRoles;
+  logonname?: string;
+  is_active?: boolean;
+  is_verified?: boolean;
+  platform_access?: UserPlatformAccess;
+  deviceId?: string;
+  deviceType?: string;
+  phoneNumber?: string;
+  smsEnabled?: boolean;
+  azureAdUserId?: string;
+  verification_random?: string;
+  forgotpass_token?: string;
+  twofactor_stat?: number;
+  twofactor_secret?: string;
+  notes?: string;
+  key_stack?: string;
+  activation_time?: Date;
+  verification_time?: Date;
+  activatedAt?: Date;
+  verifiedAt?: Date;
+  smsSecret?: string;
+  twoFactorPriority?: Array<string>;
+  otpEnabled?: boolean;
+  otpSecret?: string;
+  securityKeyData?: Array<any>;
+  securityKeyChallenge?: string;
+  mblEnabled?: boolean;
+  smsOtpRetries?: number;
+  isSamlEnabled?: boolean;
+}
+
 export interface HttpCreateUserRequest {
   platform?: PLATFORM;
-  user: {
-    id: string;
-    firstname: string;
-    lastname: string;
-    username: string;
-    password: string;
-    usersalt: string;
-    roles: UserRoles;
-    logonname?: string;
-    is_active?: boolean;
-    is_verified?: boolean;
-    platform_access?: UserPlatformAccess;
-    deviceId?: string;
-    deviceType?: string;
-    phoneNumber?: string;
-    smsEnabled?: boolean;
-    azureAdUserId?: string;
-    verification_random?: string;
-    forgotpass_token?: string;
-    twofactor_stat?: number;
-    twofactor_secret?: string;
-    notes?: string;
-    key_stack?: string;
-    activation_time?: Date;
-    verification_time?: Date;
-    activatedAt?: Date;
-    verifiedAt?: Date;
-    smsSecret?: string;
-    twoFactorPriority?: Array<string>;
-    otpEnabled?: boolean;
-    otpSecret?: string;
-    securityKeyData?: Array<any>;
-    securityKeyChallenge?: string;
-    mblEnabled?: boolean;
-    smsOtpRetries?: number;
-    isSamlEnabled?: boolean;
-  };
+  user: HttpCreateUser;
 }
 
 export type HttpCreateUserResponse = HttpGetOneUserResponse;
 
+export interface HttpCreateBulkUsersRequest {
+  platform?: PLATFORM;
+  users: Array<HttpCreateUser>;
+}
+
+export type HttpCreateBulkUsersResponse = HttpGetOneUserResponse;
+
 export interface HttpUpdateUserRequest {
   platform?: PLATFORM;
+  id: string;
   user: {
-    id: string;
     firstname?: string;
     lastname?: string;
     username?: string;
@@ -181,3 +190,21 @@ export interface HttpRestoreUserRequest {
 }
 
 export type HttpRestoreUserResponse = HttpGetOneUserResponse;
+
+export interface HttpUploadUserAvatarRequest {
+  platform?: PLATFORM;
+  file: File;
+}
+
+export type HttpUploadUserAvatarResponse = HttpResponse<{ avatar: string | null | undefined }>;
+
+export interface HttpCheckUsersExistenceRequest {
+  platform?: PLATFORM;
+  usernames: Array<string>;
+}
+
+interface HttpCheckUsersExistenceResponseSingleObj {
+  [email: string]: boolean;
+}
+
+export type HttpCheckUsersExistenceResponse = HttpResponse<Array<HttpCheckUsersExistenceResponseSingleObj>>;

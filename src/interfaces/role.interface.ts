@@ -30,6 +30,7 @@ type RoleSortableKeys = {
 }[keyof Role];
 
 interface RoleQueryParams {
+  names?: Array<string>;
   name?: string;
   description?: string;
 }
@@ -53,25 +54,33 @@ export interface HttpGetOneRoleRequest {
 
 export type HttpGetOneRoleResponse = HttpResponse<Role>;
 
+export interface HttpCreateRole {
+  name: string;
+  description?: string | null;
+  permissions: {
+    [key: string]: boolean;
+  };
+  isDeletable?: boolean;
+}
+
 export interface HttpCreateRoleRequest {
   platform?: string;
-  role: {
-    id: string;
-    name: string;
-    description?: string | null;
-    permissions: {
-      [key: string]: boolean;
-    };
-    isDeletable?: boolean;
-  };
+  role: HttpCreateRole;
 }
 
 export type HttpCreateRoleResponse = HttpGetOneRoleResponse;
 
+export interface HttpCreateBulkRolesRequest {
+  platform?: string;
+  roles: Array<HttpCreateRole>;
+}
+
+export type HttpCreateBulkRolesResponse = HttpGetOneRoleResponse;
+
 export interface HttpUpdateRoleRequest {
   platform?: string;
+  id: string;
   role: {
-    id: string;
     name?: string;
     description?: string | null;
     permissions?: {

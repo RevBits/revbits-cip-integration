@@ -1,5 +1,12 @@
+import { createReadStream } from 'fs';
+import FormData from 'form-data';
+
 import { CIP_OPTIONS, PLATFORM } from '../interfaces/types.type';
 import {Actor,
+  HttpCheckUsersExistenceRequest,
+  HttpCheckUsersExistenceResponse,
+  HttpCreateBulkUsersRequest,
+  HttpCreateBulkUsersResponse,
   HttpCreateUserRequest,
   HttpCreateUserResponse,
   HttpDeleteUserRequest,
@@ -11,7 +18,8 @@ import {Actor,
   HttpRestoreUserRequest,
   HttpRestoreUserResponse,
   HttpUpdateUserRequest,
-  HttpUpdateUserResponse} from '../interfaces/user.interface';
+  HttpUpdateUserResponse,
+  HttpUploadUserAvatarResponse} from '../interfaces/user.interface';
 import { JWTClient } from '../services/jwt.client';
 import { API_ENDPOINTS } from './api.config';
 import { BaseApi } from './base.api';
@@ -38,11 +46,11 @@ export default class UsersApi extends BaseApi {
     );
   }
 
-  public async getOne(id: string): Promise<HttpGetOneUserResponse> {
+  public async getOne(id: string, username: string | null | undefined = null): Promise<HttpGetOneUserResponse> {
     return this.sendApiRequest<HttpGetOneUserRequest, HttpGetOneUserResponse>(
       API_ENDPOINTS.USER.GET_ONE,
-      { id },
-      `Unable to get User against id ${id}.`,
+      { id, username },
+      id ? `Unable to get User against id ${id}.` : `Unable to get User against username ${username}.`,
     );
   }
 
@@ -54,11 +62,32 @@ export default class UsersApi extends BaseApi {
     );
   }
 
+  public async createBulk(data: HttpCreateBulkUsersRequest): Promise<HttpCreateBulkUsersResponse> {
+    return this.sendApiRequest<HttpCreateBulkUsersRequest, HttpCreateBulkUsersResponse>(
+      API_ENDPOINTS.USER.CREATE_BULK,
+      data,
+      'Unable to create bulk Users.',
+    );
+  }
+
   public async update(data: HttpUpdateUserRequest): Promise<HttpUpdateUserResponse> {
     return this.sendApiRequest<HttpUpdateUserRequest, HttpUpdateUserResponse>(
       API_ENDPOINTS.USER.UPDATE,
       data,
-      `Unable to update User against id ${data.user.id}.`,
+      `Unable to update User against id ${data.id}.`,
+    );
+  }
+
+  public async uploadAvatar(filePath: string): Promise<HttpUploadUserAvatarResponse> {
+    const file = createReadStream(filePath);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.sendFormDataApiRequest<HttpUploadUserAvatarResponse>(
+      API_ENDPOINTS.USER.UPLOAD_AVATAR,
+      formData,
+      `User Avatar could not be uploaded.`,
     );
   }
 
@@ -75,6 +104,14 @@ export default class UsersApi extends BaseApi {
       API_ENDPOINTS.USER.RESTORE,
       { id },
       `Unable to restore User against id ${id}.`,
+    );
+  }
+
+  public async checkUsersExistenceByUsernames(usernames: Array<string>): Promise<HttpCheckUsersExistenceResponse> {
+    return this.sendApiRequest<HttpCheckUsersExistenceRequest, HttpCheckUsersExistenceResponse>(
+      API_ENDPOINTS.USER.CHECK_USERS_EXISTENCE_BY_USERNAMES,
+      { usernames },
+      `Unable to check existence of users against given usernames list.`,
     );
   }
 }

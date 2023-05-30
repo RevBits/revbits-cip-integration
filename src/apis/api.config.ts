@@ -6,6 +6,7 @@ export const API_CONFIG = {
   AUTHORIZATION: (jwtToken: string) => `Bearer ${jwtToken}`,
   DEFAULT_TIMEOUT: 10000,
   DEFAULT_REJECT_UNAUTH: false,
+  MAX_ALLOWED_BULK_RECORDS_PER_REQUEST: 50,
 };
 
 export const API_ENDPOINTS = {
@@ -14,14 +15,18 @@ export const API_ENDPOINTS = {
     GET_ALL: 'users/GetUsers',
     GET_ONE: 'users/GetOneUser',
     CREATE: 'users/CreateUser',
+    CREATE_BULK: 'users/CreateBulkUsers',
     UPDATE: 'users/UpdateUser',
+    UPLOAD_AVATAR: 'users/UploadAvatar',
     DELETE: 'users/DeleteUser',
     RESTORE: 'users/RestoreUser',
+    CHECK_USERS_EXISTENCE_BY_USERNAMES: 'users/CheckUsersExistenceByUsernames',
   },
   ROLE: {
     GET_ALL: 'roles/GetRoles',
     GET_ONE: 'roles/GetOneRole',
     CREATE: 'roles/CreateRole',
+    CREATE_BULK: 'roles/CreateBulkRoles',
     UPDATE: 'roles/UpdateRole',
     DELETE: 'roles/DeleteRole',
   },

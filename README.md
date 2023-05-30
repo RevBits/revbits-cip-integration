@@ -1,15 +1,21 @@
 ## RevBits - CIP Integration
 
-> CIP Integration made easy
-
-<!-- [![npm version](https://img.shields.io/npm/v/@revbits/cip-integration.svg?style=flat-square)](https://www.npmjs.org/package/@revbits/cip-integration)  
-[![Downloads](https://badgen.net/npm/dt/@revbits/cip-integration)](https://www.npmjs.com/package/@revbits/cip-integration)  
-[![install size](https://img.shields.io/badge/dynamic/json?url=https://packagephobia.com/v2/api.json?p=@revbits/cip-integration&query=$.install.pretty&label=install%20size&style=flat-square)](https://packagephobia.now.sh/result?p=@revbits/cip-integration)  
-[![Known Vulnerabilities](https://snyk.io/test/npm/@revbits/cip-integration/badge.svg)](https://snyk.io/test/npm/@revbits/cip-integration) -->
+[![Downloads](https://badgen.net/npm/dt/revbits-cip-integration)](https://www.npmjs.com/package/revbits-cip-integration)
+[![npm version](https://img.shields.io/npm/v/revbits-cip-integration.svg?style=flat-square)](https://www.npmjs.org/package/revbits-cip-integration)
+[![install size](https://img.shields.io/badge/dynamic/json?url=https://packagephobia.com/v2/api.json?p=revbits-cip-integration&query=$.install.pretty&label=install%20size&style=flat-square)](https://packagephobia.now.sh/result?p=revbits-cip-integration)
+[![Known Vulnerabilities](https://snyk.io/test/npm/revbits-cip-integration/badge.svg)](https://snyk.io/test/npm/revbits-cip-integration)
 
 ## Description
 
-`@revbits/cip-integration` is an npm package that provides integration with the CIP (Cyber Intelligence Platform) API. It allows you to interact with user, role, permissions and notifications data in the CIP system.
+The `revbits-cip-integration` npm package is a comprehensive toolkit designed to streamline and enhance your integration with the CIP (Cyber Intelligence Platform) API. This powerful package empowers developers by providing a range of robust functionalities to interact with user management, role-based access control, permission management, and notifications within the CIP ecosystem.
+
+With revbits-cip-integration, you can seamlessly retrieve, create, update, and delete user data, enabling smooth synchronization between your application and the CIP system. Effortlessly manage roles and permissions, granting or revoking access rights with ease. Stay on top of crucial events and notifications by leveraging the package's capabilities to send, receive, and process notifications, ensuring timely and efficient communication within your application.
+
+Additionally, the `revbits-cip-integration` package offers a powerful event-based mechanism that allows you to monitor data changes on the CIP side. Whenever there are changes to user data, such as updates to user profiles or role assignments, the package provides event notifications, enabling you to respond dynamically and keep your application's data in sync with the latest changes in the CIP system.
+
+The revbits-cip-integration npm package is meticulously designed to offer a user-friendly and intuitive interface, reducing development complexity and allowing developers to focus on building exceptional integrations. It serves as a valuable tool for integrating your application with the CIP API, enabling you to leverage the full potential of the CIP platform and deliver a seamless experience to your users.
+
+By leveraging the revbits-cip-integration npm package, you can harness the power of the CIP API effortlessly, unlocking a world of possibilities for your application while ensuring secure and efficient data management within the CIP system.
 
 ## Table of Contents
 
@@ -36,10 +42,6 @@
 
 ## Installation
 
-<!-- ```plaintext
-npm install @revbits/cip-integration
-``` -->
-
 ```plaintext
 npm install revbits-cip-integration
 ```
@@ -47,17 +49,17 @@ npm install revbits-cip-integration
 Once the package is installed, you can import the `CIP` library by using
 
 ```javascript
-const { CIP } = require('@revbits/cip-integration');
+const { CIP } = require('revbits-cip-integration');
 ```
 
 ## Usage
 
-To use `@revbits/cip-integration`, follow these steps:
+To use `revbits-cip-integration`, follow these steps:
 
 1.  Import the `CIP` class from the package:
 
 ```javascript
-const { CIP } = require('@revbits/cip-integration');
+const { CIP } = require('revbits-cip-integration');
 ```
 
 1.  Create a new instance of `CIP` by providing the necessary configuration options:
@@ -74,32 +76,38 @@ const cip = new CIP(CIP_BASE_URL, SOCKET_POSTFIX, PLATFORM, privKey, {
 });
 ```
 
-2. CIP Library prints some logs, like socket connection & reconnection, If you don't want to see Library logs
-> set `HIDE_CIP_LOGS=true` in .env
+2. CIP Library prints some logs, like socket connection & reconnection, To enhance your experience with the CIP Library, you have the flexibility to disable the generation of logs
+
+set `HIDE_CIP_LOGS=true` in .env
 ```plaintext
 HIDE_CIP_LOGS=true
 ```
-> or in your code before using library
+or in your code before using library
 ```javascript
 process.env.HIDE_CIP_LOGS = 'true'
 ```
 
 ### Available Methods
 **Available Methods for** `cip` **instance**
-> You don't need to pass platform in every request, CIP Library passes the platform automatically.
+> The CIP Library automatically includes the platform information in every request, so there is no need for you to explicitly pass the platform parameter each time.
 
 | Method | Description | Definition |
 | --- | --- | --- |
 | getUsers | To Get Paginated Users | cip.getUsers(?OPTIONS) |
 | getUser | To Get Single User | cip.getUser(USER\_ID) |
+| getUserByUsername | To Get User by username/email | cip.getUserByUsername(USER\_NAME) |
 | createUser | To Create a User on CIP | cip.createUser({ user: USER\_ATTRIBUTES }, ?ACTOR) |
-| updateUser | To Update a User on CIP | cip.updateUser({ user: { id: USER\_ID, ...UPDATED\_ATTRIBUTES } }, ?ACTOR) |
+| createBulkUsers | To Create Bulk Users on CIP | cip.createBulkUsers({ users: [USERS\_ATTRIBUTES] }, ?ACTOR) |
+| updateUser | To Update a User on CIP | cip.updateUser({ id: USER\_ID, user: { ...UPDATED\_ATTRIBUTES } }, ?ACTOR) |
+| uploadAvatar | To upload User Avatar on CIP | cip.uploadAvatar(AVATAR\_PATH, ACTOR) |
 | deleteUser | To Delete User | cip.deleteUser(USER\_ID, ?ACTOR) |
 | restoreUser | To Restore User | cip.restoreUser(USER\_ID, ?ACTOR) |
+| checkUsersExistenceByUsernames | To Check Users Existence using usernames | cip.checkUsersExistenceByUsernames([...USERNAMES], ?ACTOR) |
 | getRoles | To Get Paginated Roles | cip.getRoles(?OPTIONS) |
 | getRole | To Get a Single Role | cip.getRole(ROLE\_ID) |
 | createRole | To Create a Role on CIP | cip.createRole({ role: ROLE\_ATTRIBUTES }, ?ACTOR) |
-| updateRole | To Update Role on CIP | cip.updateRole({ role: { id: ROLE\_ID, ...UPDATED\_ATTRIBUTES } }, ?ACTOR) |
+| createBulkRoles | To Create Bulk Roles on CIP | cip.createBulkRoles({ users: [ROLES\_ATTRIBUTES] }, ?ACTOR) |
+| updateRole | To Update Role on CIP | cip.updateRole({ id: ROLE\_ID, role: { ...UPDATED\_ATTRIBUTES } }, ?ACTOR) |
 | deleteRole | To Delete Role from CIP | cip.deleteRole(ROLE\_ID, ?ACTOR) |
 | getPermissions | To Get Permissions | cip.getPermissions() |
 | getPermission | To Get a Single Permission | cip.getPermission(PERMISSION\_KEY) |
@@ -112,14 +120,11 @@ process.env.HIDE_CIP_LOGS = 'true'
 | readNotification | To Read Notification | cip.readNotification(PLATFORM\_NOTIFICATION\_ID, ACTOR) |
 | deleteNotification | To Delete Notifications | cip.deleteNotification(PLATFORM\_NOTIFICATION\_ID, ?ACTOR) |
 
-> You can pass an Actor as an Argument to all methods (which needs `Audit Logs`). If not passed, then `CIP BOT` will be used as an Actor in `Audit Logs` on `CIP`.
+> For methods that require `audit logs`, you have the flexibility to pass an `actor` as an argument. In case you don't provide an `actor`, the default option is to use the `CIP BOT` as the `actor` in the audit logs on the `CIP` platform.
 
-Sample Actor (it must contain `id` and `username`)
+Sample Actor (it must contain `username`)
 ```javascript
-const actor = {
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+const actor = { username: "username@org.com" };
 ```
 
 ### Users Usage
@@ -140,6 +145,14 @@ cip.getUser(USER_ID)
 .catch(err => console.error(err));
 ```
 
+To Retrieve single User by username/email
+
+```javascript
+cip.getUserByUsername(USER_NAME)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
 To Create User
 
 ```javascript
@@ -148,10 +161,28 @@ cip.createUser({ user: USER_ATTRIBUTES }, ?ACTOR)
 .catch(err => console.error(err));
 ```
 
+To Create Bulk Users
+> To adhere to the maximum limit of 50 records per request, you need to ensure that if you have more than 50 records, you split them into smaller chunks of 50. Then, you can call the createBulkUsers function for each chunk separately.
+```javascript
+cip.createBulkUsers({ users: [USER_ATTRIBUTES] }, ?ACTOR)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
 To Update User
 
 ```javascript
-cip.updateUser({ user: { id: USER_ID, ...UPDATED_ATTRIBUTES } }, ?ACTOR)
+cip.updateUser({ id: USER_ID, user: { ...UPDATED_ATTRIBUTES } }, ?ACTOR)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
+To Upload User Avatar
+> NOTE: Actor is required.
+
+> Avatar Path should be `Absolute Path`
+```javascript
+cip.uploadAvatar(AVATAR_PATH, ACTOR)
 .then(result => console.log(result))
 .catch(err => console.error(err));
 ```
@@ -168,6 +199,14 @@ To Restore User
 
 ```javascript
 cip.restoreUser(USER_ID, ?ACTOR)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
+To Check Users Existence using Usernames
+
+```javascript
+cip.checkUsersExistenceByUsernames([...USERNAMES])
 .then(result => console.log(result))
 .catch(err => console.error(err));
 ```
@@ -197,10 +236,18 @@ cip.createRole({ role: ROLE_ATTRIBUTES }, ?ACTOR)
 .catch(err => console.error(err));
 ```
 
+To Create Bulk Roles
+> To adhere to the maximum limit of 50 records per request, you need to ensure that if you have more than 50 records, you split them into smaller chunks of 50. Then, you can call the createBulkUsers function for each chunk separately.
+```javascript
+cip.createBulkRoles({ roles: [ROLES_ATTRIBUTES] }, ?ACTOR)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
 To Update Role
 
 ```javascript
-cip.updateRole({ role: { id: ROLE_ID, ...UPDATED_ATTRIBUTES } }, ?ACTOR)
+cip.updateRole({ id: ROLE_ID, role: { ...UPDATED_ATTRIBUTES } }, ?ACTOR)
 .then(result => console.log(result))
 .catch(err => console.error(err));
 ```
@@ -293,12 +340,12 @@ cip.deleteNotification(PLATFORM_NOTIFICATION_ID, ?ACTOR)
 ```
 
 ## Example
-> Below are the sample requests, you can check more yourself by consoling the responses (if needed). You can also check the interfaces to determine the request and responses.
+> Here are some sample requests for you to try out. Feel free to log the responses if you want to examine them further. You can refer to the interfaces provided to understand the structure of the requests and responses.
 
 ### CIP Example
 You can create an instance of CIP by passing necessary configurations options:
 
-> NOTE: You need to create instance of CIP class `asynchronously` on your server side as this operation will be blocking to listen `socket events` in `callback`, so if you use `await` when initializing `cip` instance, your code will be blocked there.
+> NOTE: Please ensure that you create an instance of the CIP class asynchronously on your server-side. This is important because the operation can block the execution of code when listening to socket events in the callback. If you use the await keyword during the initialization of the CIP instance, your code will be blocked at that point. To avoid this, make sure to handle the initialization asynchronously using async/await or by using promises. This allows your code to continue executing other tasks while the CIP instance is being created in the background.
 ```javascript
 const baseUrl = 'https://revbits-cip-server.net'; // The base URL of the CIP platform (excluding api/v2)
 const socketPostfix = ':8889'; // The postfix for the socket connection (e.g., '/pws' for Cloud CIP)
@@ -309,14 +356,14 @@ const privKey = fs.readFileSync('jwt-keys/cip/private.key', { encoding: 'utf-8' 
 const cip = new CIP(baseUrl, socketPostfix, platform, privKey, {
     tlsRejectUnauthorized: false, // Set to `true` if you want to reject self-signed certificates (default: false)
     timeout: 20000 // The API timeout in milliseconds (default: 10000)
-}, (_event) => { // this callback is optional, if you don't want to listen socket events on data changes, then you should not pass this callback function
+}, (_event) => { // The callback function for socket events on data changes is not mandatory. If you prefer not to listen to these events, you can simply omit passing this callback function.
 	console.log(_event); // Log Socket Events triggered when there are data changes on CIP
 	// Sample Event
 	// {
 	// 	cipEvent: {
 	// 		action: 'created',
 	// 		model: 'user',
-	//      id: '3b6d6a1e-cbb2-4599-8ccf-972128393a9b',
+	//    id: '3b6d6a1e-cbb2-4599-8ccf-972128393a9b',
 	// 		...
 	// 	},
 	// 	event: 'updated-user',
@@ -326,7 +373,7 @@ const cip = new CIP(baseUrl, socketPostfix, platform, privKey, {
 	// You can apply conditions here when event is received
 	// for example, an event receives, `updated-user`, then you will update that user in your database
 	if(_event.event === 'updated-user') {
-		const latestUser = _event.data; // When event Triggers, CIP Library will call CIP Server automatically to fetch latest data against that event
+		const latestUser = _event.data; // Upon the occurrence of an event trigger, the CIP Library will automatically make a call to the CIP Server to retrieve the latest data associated with that event.
 		// Update latest user in DB
 		UserModel.findAndUpdate(latestUser, {
 			where: { id: latestUser.id }
@@ -336,7 +383,7 @@ const cip = new CIP(baseUrl, socketPostfix, platform, privKey, {
 
 ```
 
-> In all below APIs, Please must catch errors, if you don't, your server may crash
+> When using any of the APIs listed below, it is crucial to implement proper error handling. Neglecting to do so could result in server crashes.
 ### Users Example
 
 To retrieve list of users
@@ -348,6 +395,7 @@ const options = {
   direction?: string; // Specify direction asc, desc for sorting
   perPage?: number;  // Specifiy how many records you need per page (Default: 250)
   query?: { // You can use this if you need advance search
+    usernames?: Array<string>;
     username?: string;
     firstname?: string;
     lastname?: string;
@@ -368,6 +416,15 @@ cip.getUser(user_id)
 .catch(err => console.error(err));
 ```
 
+To Retrieve single User by username/email
+
+```javascript
+const username = 'user@org.com';
+cip.getUserByUsername(username)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
 To create user
 ```javascript
 const UserPlatformAccess = {
@@ -381,7 +438,6 @@ const UserPlatformAccess = {
 
 const data = {
   user: {
-    id: string;
     firstname: string;
     lastname: string;
     username: string;
@@ -418,11 +474,68 @@ const data = {
     isSamlEnabled?: boolean;
   };
 };
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 cip.createUser(data, actor)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
+To Create Bulk Users
+> To adhere to the maximum limit of 50 records per request, you need to ensure that if you have more than 50 records, you split them into smaller chunks of 50. Then, you can call the createBulkUsers function for each chunk separately.
+```javascript
+const UserPlatformAccess = {
+  dt_enabled: boolean;
+  es_enabled: boolean;
+  pp_enabled: boolean;
+  up_enabled: boolean;
+  eps_enabled: boolean;
+  pam_enabled: boolean;
+};
+
+const data = {
+  users: [
+    {
+      firstname: string;
+      lastname: string;
+      username: string;
+      password: string;
+      usersalt: string;
+      roles: UserRoles;
+      logonname?: string;
+      is_active?: boolean;
+      is_verified?: boolean;
+      platform_access?: UserPlatformAccess;
+      deviceId?: string;
+      deviceType?: string;
+      phoneNumber?: string;
+      smsEnabled?: boolean;
+      azureAdUserId?: string;
+      verification_random?: string;
+      forgotpass_token?: string;
+      twofactor_stat?: number;
+      twofactor_secret?: string;
+      notes?: string;
+      key_stack?: string;
+      activation_time?: Date;
+      verification_time?: Date;
+      activatedAt?: Date;
+      verifiedAt?: Date;
+      smsSecret?: string;
+      twoFactorPriority?: Array<string>;
+      otpEnabled?: boolean;
+      otpSecret?: string;
+      securityKeyData?: Array<any>;
+      securityKeyChallenge?: string;
+      mblEnabled?: boolean;
+      smsOtpRetries?: number;
+      isSamlEnabled?: boolean;
+    }
+  ];
+};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
+cip.createBulkUsers(data, actor)
 .then(result => console.log(result))
 .catch(err => console.error(err));
 ```
@@ -439,8 +552,8 @@ const UserPlatformAccess = {
 };
 
 const data = {
+  id: string;
   user: {
-    id: string; // required
     firstname?: string;
     lastname?: string;
     username?: string;
@@ -477,11 +590,21 @@ const data = {
     isSamlEnabled?: boolean;
   };
 };
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 cip.updateUser(data, actor)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
+
+To Upload User Avatar
+> NOTE: Actor is required.
+
+> Avatar Path should be `Absolute Path`
+```javascript
+const actor = { username: "username@org.com" }; // The actor represents the user who is uploading their avatar.
+cip.uploadAvatar('/home/path/to/avatar/file.png', actor)
 .then(result => console.log(result))
 .catch(err => console.error(err));
 ```
@@ -489,10 +612,8 @@ cip.updateUser(data, actor)
 To Delete User
 
 ```javascript
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 const user_id = 'ef7a4a52-83c3-4a13-8a18-130fa23ea821';
 cip.deleteUser(user_id, actor)
 .then(result => console.log(result))
@@ -502,12 +623,18 @@ cip.deleteUser(user_id, actor)
 To Restore User
 
 ```javascript
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 const user_id = 'ef7a4a52-83c3-4a13-8a18-130fa23ea821';
 cip.restoreUser(user_id, actor)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
+To Check Users Existence using Usernames
+
+```javascript
+cip.checkUsersExistenceByUsernames(['user1@org.com', 'user2@org.com', 'user3@org.com'])
 .then(result => console.log(result))
 .catch(err => console.error(err));
 ```
@@ -522,8 +649,9 @@ const options = {
   direction?: string; // Specify direction asc, desc for sorting
   perPage?: number;  // Specifiy how many records you need per page (Default: 250)
   query?: { // You can use this if you need advance search
-	name?: string;
-	descripion?: string;
+    names?: Array<string>;
+    name?: string;
+    descripion?: string;
   };
 };
 cip.getRoles(options)
@@ -543,7 +671,6 @@ To create role
 ```javascript
 const data = {
   role: {
-    id: string;
     name: string;
     description?: string | null;
     permissions: {
@@ -552,11 +679,31 @@ const data = {
     isDeletable?: boolean;
   };
 };
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 cip.createRole(data, actor)
+.then(result => console.log(result))
+.catch(err => console.error(err));
+```
+
+To Create Bulk Roles
+> To adhere to the maximum limit of 50 records per request, you need to ensure that if you have more than 50 records, you split them into smaller chunks of 50. Then, you can call the createBulkUsers function for each chunk separately.
+```javascript
+const data = {
+  roles: [
+    {
+      name: string;
+      description?: string | null;
+      permissions: {
+        [key: string]: boolean;
+      };
+      isDeletable?: boolean;
+    }
+  ]
+};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
+cip.createBulkRoles(data, actor)
 .then(result => console.log(result))
 .catch(err => console.error(err));
 ```
@@ -564,8 +711,8 @@ cip.createRole(data, actor)
 To update role
 ```javascript
 const data = {
+  id: string;
   role: {
-    id: string; // required
     name?: string;
     description?: string | null;
     permissions?: {
@@ -574,10 +721,8 @@ const data = {
     isDeletable?: boolean;
   };
 };
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 cip.updateRole(data, actor)
 .then(result => console.log(result))
 .catch(err => console.error(err));
@@ -585,11 +730,9 @@ cip.updateRole(data, actor)
 
 To delete role
 ```javascript
-const role_id = "3b6d6a1e-cbb2-4599-8ccf-972128393a9b";
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+const role_id =
+// The user performing the action is optional, with the default value being set as the "CIP BOT." "3b6d6a1e-cbb2-4599-8ccf-972128393a9b";
+const actor = { username: "username@org.com" };
 cip.deleteRole(role_id, actor)
 .then(result => console.log(result))
 .catch(err => console.error(err));
@@ -612,7 +755,7 @@ cip.getPermission(permission_key)
 ```
 
 To sync permissions
-> NOTE: You need to pass all permissions which you want to keep, the permissions which are missing in this request will be deleted from CIP.
+> Please note that you should include all the permissions you want to retain when making this request. Any permissions not included in this request will be removed from CIP.
 
 ```javascript
 const permissions = [
@@ -633,10 +776,8 @@ const permissions = [
     ...
     // all other permissions
 ];
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 cip.syncPermissions({ permissions: permissions }, actor)
 .then(result => console.log(result))
 .catch(err => console.error(err));
@@ -645,10 +786,8 @@ cip.syncPermissions({ permissions: permissions }, actor)
 To delete Permission
 
 ```javascript
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 const permission_key = 'pam-view-personal-session-logs';
 cip.deletePermission(permission_key, actor)
 .then(result => console.log(result))
@@ -659,10 +798,8 @@ To delete all platform Permissions
 > NOTE: Be Careful doing this action, it will delete all permissions of the platform from CIP
 
 ```javascript
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 cip.deletePlatformPermissions(actor)
 .then(result => console.log(result))
 .catch(err => console.error(err));
@@ -721,10 +858,8 @@ const data = {
     createdAt: Date | null | undefined;
   };
 };
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 cip.createNotification({ notification: NOTIFICATION_ATTRIBUTES }, ?ACTOR)
 .then(result => console.log(result))
 .catch(err => console.error(err));
@@ -733,13 +868,11 @@ cip.createNotification({ notification: NOTIFICATION_ATTRIBUTES }, ?ACTOR)
 To read Notification
 > NOTE: Actor is required to Read Notification
 
-> REMEMBER: Actor should be the person who received notification so that he can read it 
+> Please remember that the actor should be the person who received the notification, as they need to be able to read it.
 ```javascript
+// It is mandatory to specify the user who is reading the notification.
+const actor = { username: "username@org.com" };
 const platform_notification_id = 'dbdb7813-a9c8-4128-834a-09f4980676d4';
-const actor = { // The User who is reading notification, it's required
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
 cip.readNotification(platform_notification_id, actor)
 .then(result => console.log(result))
 .catch(err => console.error(err));
@@ -747,10 +880,8 @@ cip.readNotification(platform_notification_id, actor)
 
 To delete notification
 ```javascript
-const actor = { // The User who is performing action, it's optional (Default: CIP BOT)
-	id: "3b6d6a1e-cbb2-4599-8ccf-972128393a9b",
-	username: "username@org.com"
-};
+// The user performing the action is optional, with the default value being set as the "CIP BOT."
+const actor = { username: "username@org.com" };
 const platform_notification_id = 'dbdb7813-a9c8-4128-834a-09f4980676d4';
 cip.deleteNotification(platform_notification_id, actor)
 .then(result => console.log(result))

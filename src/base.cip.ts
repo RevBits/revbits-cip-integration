@@ -15,7 +15,9 @@ import {HttpDeletePermissionResponse,
   HttpGetOnePermissionResponse,
   HttpSyncPermissionsRequest,
   HttpSyncPermissionsResponse} from './interfaces/permission.interface';
-import {HttpCreateRoleRequest,
+import {HttpCreateBulkRolesRequest,
+  HttpCreateBulkRolesResponse,
+  HttpCreateRoleRequest,
   HttpCreateRoleResponse,
   HttpDeleteRoleResponse,
   HttpGetAllRolesRequest,
@@ -26,6 +28,9 @@ import {HttpCreateRoleRequest,
 import { SOCKET_CALLBACK } from './interfaces/socket.interface';
 import { CIP_OPTIONS, PLATFORM } from './interfaces/types.type';
 import {Actor,
+  HttpCheckUsersExistenceResponse,
+  HttpCreateBulkUsersRequest,
+  HttpCreateBulkUsersResponse,
   HttpCreateUserRequest,
   HttpCreateUserResponse,
   HttpDeleteUserResponse,
@@ -34,8 +39,9 @@ import {Actor,
   HttpGetOneUserResponse,
   HttpRestoreUserResponse,
   HttpUpdateUserRequest,
-  HttpUpdateUserResponse} from './interfaces/user.interface';
-import { validateActor, validateRequiredParams, verifyVariableType } from './utils/helpers';
+  HttpUpdateUserResponse,
+  HttpUploadUserAvatarResponse} from './interfaces/user.interface';
+import { validateActor, validateBulkRecordsCount, validateRequiredParams, verifyVariableType } from './utils/helpers';
 
 export abstract class BaseCIP {
   private userApi!: UsersApi;
@@ -93,11 +99,26 @@ export abstract class BaseCIP {
     return this.getUserApi(actor).getOne(id);
   }
 
+  public async getUserByUsername(
+    username: string,
+    actor: Actor | null | undefined = null,
+  ): Promise<HttpGetOneUserResponse> {
+    return this.getUserApi(actor).getOne('', username);
+  }
+
   public async createUser(
     requestData: HttpCreateUserRequest,
     actor: Actor | null | undefined = null,
   ): Promise<HttpCreateUserResponse> {
     return this.getUserApi(actor).create(requestData);
+  }
+
+  public async createBulkUsers(
+    requestData: HttpCreateBulkUsersRequest,
+    actor: Actor | null | undefined = null,
+  ): Promise<HttpCreateBulkUsersResponse> {
+    validateBulkRecordsCount(requestData.users);
+    return this.getUserApi(actor).createBulk(requestData);
   }
 
   public async updateUser(
@@ -107,8 +128,23 @@ export abstract class BaseCIP {
     return this.getUserApi(actor).update(requestData);
   }
 
+  public async uploadAvatar(
+    filePath: string,
+    actor: Actor | null | undefined = null,
+  ): Promise<HttpUploadUserAvatarResponse> {
+    validateActor(actor);
+    return this.getUserApi(actor).uploadAvatar(filePath);
+  }
+
   public async deleteUser(id: string, actor: Actor | null | undefined = null): Promise<HttpDeleteUserResponse> {
     return this.getUserApi(actor).delete(id);
+  }
+
+  public async checkUsersExistenceByUsernames(
+    usernames: Array<string>,
+    actor: Actor | null | undefined = null,
+  ): Promise<HttpCheckUsersExistenceResponse> {
+    return this.getUserApi(actor).checkUsersExistenceByUsernames(usernames);
   }
 
   public async restoreUser(id: string, actor: Actor | null | undefined = null): Promise<HttpRestoreUserResponse> {
@@ -131,6 +167,14 @@ export abstract class BaseCIP {
     actor: Actor | null | undefined = null,
   ): Promise<HttpCreateRoleResponse> {
     return this.getRoleApi(actor).create(requestData);
+  }
+
+  public async createBulkRoles(
+    requestData: HttpCreateBulkRolesRequest,
+    actor: Actor | null | undefined = null,
+  ): Promise<HttpCreateBulkRolesResponse> {
+    validateBulkRecordsCount(requestData.roles);
+    return this.getRoleApi(actor).createBulk(requestData);
   }
 
   public async updateRole(
